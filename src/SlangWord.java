@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -12,6 +13,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 
 public class SlangWord {
@@ -22,8 +25,8 @@ public class SlangWord {
 //    private static final String ORIGINAL_FILE_NAME = "original-slang.txt";
 //    private static final String HISTORY_FILE_NAME = "history-slang.txt";
     private static final String NEW_LINE_SEPARATOR = "\n";
-	private static final String GRAVE_ACCENT_DELIMITER = "\\`";
-	private static final String PIPE_DELIMITER = "\\|";
+	private static final String GRAVE_ACCENT_DELIMITER = "`";
+	private static final String PIPE_DELIMITER = "|";
     
 	/*
 	 * Bill Pugh Singleton Implementation
@@ -45,35 +48,34 @@ public class SlangWord {
 		return slangWords;
 	}
 	
-//	public Boolean writeFile(String fileName) throws IOException {
-//        BufferedWriter bw = null;
-//        try {
-//            bw = new BufferedWriter(new FileWriter(fileName));
-//            for(Student student : students) {
-//                bw.append(student.getId().toString());
-//                bw.append(COMMA_DELIMITER);
-//                bw.append(student.getName());
-//                bw.append(COMMA_DELIMITER);
-//                bw.append(student.getScore() == null ? "" : student.getScore().toString());
-//                bw.append(COMMA_DELIMITER);
-//                bw.append(student.getImage());
-//                bw.append(COMMA_DELIMITER);
-//                bw.append(student.getAddress());
-//                bw.append(COMMA_DELIMITER);
-//                bw.append(student.getNote());
-//                bw.append(NEW_LINE_SEPARATOR);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return false;
-//        } finally {
-//            bw.flush();
-//            bw.close();
-//        }
-//        return true;
-//    }
-//	
-	
+	public Boolean writeFile(String fileName) throws IOException {
+        BufferedWriter bw = null;
+        try {
+            bw = new BufferedWriter(new FileWriter(fileName));
+            for (Entry<String, List<String>> entry : this.slangWords.entrySet()) {       
+            	bw.append(entry.getKey()).append(GRAVE_ACCENT_DELIMITER); // add slang 
+            	
+            	// add definition
+            	List<String> definitions = entry.getValue();
+            	StringBuilder defnitionBuilder = new StringBuilder();
+            	for(String definition : definitions) {
+            		defnitionBuilder.append(definition).append(PIPE_DELIMITER);
+				}
+            	defnitionBuilder.deleteCharAt(defnitionBuilder.length() - 1);
+            	defnitionBuilder.append(NEW_LINE_SEPARATOR);
+            	bw.append(defnitionBuilder);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            bw.flush();
+            bw.close();
+        }
+        return true;
+    }
+
 	public Boolean readFile(String fileName) throws IOException {
     	Path path = null;
         BufferedReader br = null;
@@ -86,7 +88,7 @@ public class SlangWord {
             
             while ((csvLine = br.readLine()) != null) {
             	String[] data = csvLine.split(GRAVE_ACCENT_DELIMITER, -1);
-                slangWords.put(data[0], Arrays.asList(data[1].split(PIPE_DELIMITER, -1)));
+            	slangWords.put(data[0], Arrays.stream(data[1].split("\\".concat(PIPE_DELIMITER), -1)).map(String::trim).collect(Collectors.toList()));
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -101,4 +103,17 @@ public class SlangWord {
         return true;
     }
 	
+	public Boolean isExists(String slang) {
+		return slangWords.keySet().stream().anyMatch(s -> s.equals(slang));
+	}
+	
+	public void add(String slang, String defnition, AddType addType) throws IOException {
+		if (addType.equals(AddType.DUPLICATE)) {
+			slangWords.get(slang).add(defnition);
+		}
+		writeFile("test.txt");
+//		} else if (addType.equals(AddType.OVERRIDE)) {
+////			slangWords.get(slang).clear()
+//		}
+	}
 }
