@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -84,10 +85,10 @@ public class SlangWord {
         	path = Paths.get(fileName);
             br = Files.newBufferedReader(path, StandardCharsets.UTF_8);
             slangWords.clear();
-            String csvLine;
+            String line;
             
-            while ((csvLine = br.readLine()) != null) {
-            	String[] data = csvLine.split(GRAVE_ACCENT_DELIMITER, -1);
+            while ((line = br.readLine()) != null) {
+            	String[] data = line.split(GRAVE_ACCENT_DELIMITER, -1);
             	slangWords.put(data[0], Arrays.stream(data[1].split("\\".concat(PIPE_DELIMITER), -1)).map(String::trim).collect(Collectors.toList()));
             }
         } catch(Exception e) {
@@ -107,13 +108,27 @@ public class SlangWord {
 		return slangWords.keySet().stream().anyMatch(s -> s.equals(slang));
 	}
 	
-	public void add(String slang, String defnition, AddType addType) throws IOException {
-		if (addType.equals(AddType.DUPLICATE)) {
-			slangWords.get(slang).add(defnition);
+	public void add(String slang, String definition, AddType addType) throws IOException {
+		if (addType.equals(AddType.NEW)) {
+			slangWords.put(slang, Arrays.asList(definition));
+		} else if (addType.equals(AddType.DUPLICATE)) {
+			slangWords.get(slang).add(definition);
+		} else if (addType.equals(AddType.OVERRIDE)) {
+			slangWords.get(slang).clear();
+			slangWords.get(slang).add(definition);
 		}
-		writeFile("test.txt");
-//		} else if (addType.equals(AddType.OVERRIDE)) {
-////			slangWords.get(slang).clear()
-//		}
+		writeFile(FileNameUtils.DEFAULT);
+	}
+	
+	public Map<String, List<String>> findBySlang(String slang) {
+		return slangWords.entrySet().stream()
+				.filter(entry -> entry.getKey().contains(slang))
+				.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
+	}
+	
+	public Map<String, List<String>> findByDefinition(String definition) {
+		return slangWords.entrySet().stream()
+				.filter(entry -> entry.getValue().stream().allMatch(def -> def.contains(definition)))
+				.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
 	}
 }

@@ -22,7 +22,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
@@ -274,6 +276,7 @@ public class MainFrame extends JFrame {
 	}
 	
 	public void displaySlangWord(String fileName) throws IOException {
+		
 		if (slangWord.readFile(fileName)) {
 			DefaultTableModel model = new DefaultTableModel(null, columnNames);
 			int i = 0;
@@ -289,7 +292,9 @@ public class MainFrame extends JFrame {
 			}
 			tbSlangWord.setModel(model);
 		}
-	
+		
+		slangWord.findByDefinition("hap").entrySet().forEach(System.out::println);
+		
 		tbSlangWord.getColumnModel().getColumn(0).setMaxWidth(50);
 		btnAdd.setEnabled(true);
 		btnEdit.setEnabled(false);
@@ -319,20 +324,29 @@ public class MainFrame extends JFrame {
 	}
 	
 	public void add() throws IOException {
-		String slang = txtSlang.getText();
-		String definition = txtDefinition.getText();
-		slangWord.add(slang, definition, AddType.DUPLICATE);
-		clearSlangWord();
-		displaySlangWord(FileNameUtils.DEFAULT);
-//		if(validateSlangWord()) {
-//			JOptionPane.showMessageDialog(this, "ko dc bo trong", "Thông báo", JOptionPane.ERROR_MESSAGE);
-//		} else if(StudentService.create(student)) {
-//			JOptionPane.showMessageDialog(this, "Thêm thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-//			clearSlangWord();
-//			display();
-//		}
-//		} else {
-//			JOptionPane.showMessageDialog(this, "Mã học sinh đã tồn tại", "Thông báo", JOptionPane.ERROR_MESSAGE);
-//		}
+		if(validateSlangWord()) {
+			JOptionPane.showMessageDialog(this, "Slang word or definition can't be blank", "Notification", JOptionPane.ERROR_MESSAGE);
+		} else {
+			String slang = txtSlang.getText();
+			String definition = txtDefinition.getText();
+			
+			if(slangWord.isExists(slang)) {
+				Object[] options = { "Duplicate", "Override" };
+				int n = JOptionPane.showOptionDialog(this,
+						"Slang '" + slang + "' have already exist on  SlangWord  List", "Notification",
+						JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, null);
+				if(n == 0) { // override
+					slangWord.add(slang, definition, AddType.DUPLICATE);
+				} else if (n == 1) { // duplicate
+					slangWord.add(slang, definition, AddType.OVERRIDE);
+				}
+			} else {
+				slangWord.add(slang, definition, AddType.NEW);
+			}
+			
+			JOptionPane.showMessageDialog(this, "Add Successfully", "Notification", JOptionPane.INFORMATION_MESSAGE);
+			clearSlangWord();
+			displaySlangWord(FileNameUtils.DEFAULT);
+		}
 	}
 }
