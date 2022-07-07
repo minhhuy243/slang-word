@@ -15,6 +15,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -116,6 +118,15 @@ public class SlangWord {
 		} else if (addType.equals(AddType.OVERRIDE)) {
 			slangWords.get(slang).clear();
 			slangWords.get(slang).add(definition);
+		}
+		writeFile(FileNameUtils.DEFAULT);
+	}
+	
+	public void update(String slang, String oldDefinition, String newDefinition) throws IOException {
+		Optional<Entry<String, List<String>>> entry = slangWords.entrySet().stream().filter(e -> e.getKey().equals(slang)).findFirst();
+		if(entry.isPresent()) {
+			int index = entry.get().getValue().indexOf(oldDefinition);
+			entry.get().getValue().set(index, newDefinition);
 		}
 		writeFile(FileNameUtils.DEFAULT);
 	}

@@ -45,7 +45,7 @@ public class MainFrame extends JFrame {
 	private JLabel lblSlang;
 	private JLabel lblDefinition;
 	private JButton btnAdd;
-	private JButton btnEdit;
+	private JButton btnUpdate;
 	private JLabel lblQuiz;
 	private JLabel lblQuizMode;
 	private JComboBox cbQuizMode;
@@ -142,9 +142,9 @@ public class MainFrame extends JFrame {
 		btnDelete.setBounds(420, 331, 105, 31);
 		btnDelete.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		
-		btnEdit = new JButton("Edit");
-		btnEdit.setBounds(278, 331, 105, 31);
-		btnEdit.setFont(new Font("Tahoma", Font.PLAIN, 19));
+		btnUpdate = new JButton("Update");
+		btnUpdate.setBounds(278, 331, 105, 31);
+		btnUpdate.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		
 		txtSlang = new JTextField();
 		txtSlang.setBounds(137, 233, 531, 29);
@@ -161,7 +161,7 @@ public class MainFrame extends JFrame {
 		getContentPane().add(lblRandom);
 		getContentPane().add(btnAdd);
 		getContentPane().add(btnDelete);
-		getContentPane().add(btnEdit);
+		getContentPane().add(btnUpdate);
 		getContentPane().add(lblDefinition);
 		getContentPane().add(txtSlang);
 		getContentPane().add(lblKeyword);
@@ -293,11 +293,12 @@ public class MainFrame extends JFrame {
 			tbSlangWord.setModel(model);
 		}
 		
-		slangWord.findByDefinition("hap").entrySet().forEach(System.out::println);
+//		slangWord.findByDefinition("hap").entrySet().forEach(System.out::println);
+//		slangWord.update("$", "money", "moneyUpdated");
 		
 		tbSlangWord.getColumnModel().getColumn(0).setMaxWidth(50);
 		btnAdd.setEnabled(true);
-		btnEdit.setEnabled(false);
+		btnUpdate.setEnabled(false);
 		btnDelete.setEnabled(false);
 	}
 	
@@ -307,7 +308,7 @@ public class MainFrame extends JFrame {
 		txtDefinition.setText(tbSlangWord.getValueAt(index, 2).toString());
 
 		btnAdd.setEnabled(false);
-		btnEdit.setEnabled(true);
+		btnUpdate.setEnabled(true);
 		btnDelete.setEnabled(true);
 	}
 
@@ -315,7 +316,7 @@ public class MainFrame extends JFrame {
 		txtSlang.setText("");
 		txtDefinition.setText("");
 		btnAdd.setEnabled(true);
-		btnEdit.setEnabled(false);
+		btnUpdate.setEnabled(false);
 		btnDelete.setEnabled(false);
 	}
 	
