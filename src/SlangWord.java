@@ -131,6 +131,14 @@ public class SlangWord {
 		writeFile(FileNameUtils.DEFAULT);
 	}
 	
+	public void delete(String slang, String definition) throws IOException {
+		Optional<Entry<String, List<String>>> entry = slangWords.entrySet().stream().filter(e -> e.getKey().equals(slang)).findFirst();
+		if(entry.isPresent()) {
+			entry.get().getValue().remove(definition);
+		}
+		writeFile(FileNameUtils.DEFAULT);
+	}
+	
 	public Map<String, List<String>> findBySlang(String slang) {
 		return slangWords.entrySet().stream()
 				.filter(entry -> entry.getKey().contains(slang))

@@ -295,7 +295,7 @@ public class MainFrame extends JFrame {
 		
 //		slangWord.findByDefinition("hap").entrySet().forEach(System.out::println);
 //		slangWord.update("$", "money", "moneyUpdated");
-		
+		slangWord.delete("$", "moneyUpdated");
 		tbSlangWord.getColumnModel().getColumn(0).setMaxWidth(50);
 		btnAdd.setEnabled(true);
 		btnUpdate.setEnabled(false);

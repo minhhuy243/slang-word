@@ -1,6 +1,6 @@
 Slag`Meaning
 #1`321
-$`Dollar|money
+$`Dollar
 $_$`Has money
 %)`Drunk|giddy
 &`And
