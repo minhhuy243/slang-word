@@ -1,4 +1,6 @@
 Slag`Meaning
+#1`Number one
+$`Dollar|money
 $_$`Has money
 %)`Drunk|giddy
 &`And
@@ -7640,4 +7642,3 @@ ZZZ`Sleepy|bored|tired
 ~`Denotes Sarcasm|Put At The End Of A Word To Make It Longer
 Æ`Registered Trademark Symbol
 ô`Trademark
-#2`top2
