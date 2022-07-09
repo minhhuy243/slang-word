@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
@@ -276,7 +277,6 @@ public class MainFrame extends JFrame {
 	}
 	
 	public void displaySlangWord(String fileName) throws IOException {
-		
 		if (slangWord.readFile(fileName)) {
 			DefaultTableModel model = new DefaultTableModel(null, columnNames);
 			int i = 0;
@@ -295,7 +295,8 @@ public class MainFrame extends JFrame {
 		
 //		slangWord.findByDefinition("hap").entrySet().forEach(System.out::println);
 //		slangWord.update("$", "money", "moneyUpdated");
-		slangWord.delete("$", "moneyUpdated");
+//		slangWord.delete("$", "moneyUpdated");
+		slangWord.random().entrySet().forEach(System.out::println);
 		tbSlangWord.getColumnModel().getColumn(0).setMaxWidth(50);
 		btnAdd.setEnabled(true);
 		btnUpdate.setEnabled(false);

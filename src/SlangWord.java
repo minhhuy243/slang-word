@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -150,4 +151,20 @@ public class SlangWord {
 				.filter(entry -> entry.getValue().stream().allMatch(def -> def.contains(definition)))
 				.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
 	}
+	
+	public Map<String, String> random() {
+		int randomSlangIndex = new Random().nextInt(slangWords.size());
+		List<String> slangs = slangWords.keySet().stream().collect(Collectors.toList());
+		String slang = slangs.get(randomSlangIndex);
+		
+		int randomDefinitionIndex = new Random().nextInt(slangWords.get(slang).size());
+		List<String> definitions = slangWords.get(slang);
+		String definition = definitions.get(randomDefinitionIndex);
+		return Collections.singletonMap(slang, definition);
+	}
+	
+	public void quizGame() {
+		slangWords.entrySet().stream().forEach(e -> System.out.println(e.getValue());)
+	}
+	
 }
